@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda Function Version Apps Prod
+
+Resources:
+  LambdaVersionAppsProdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: co.com.virgin.lmd.version.apps.LambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: target/lmd-version-apps-1.0.jar
+      MemorySize: 1024
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 60
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  LambdaVersionAppsProdApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/version'
+    Export:
+      Name: LambdaVersionAppsProdApi
